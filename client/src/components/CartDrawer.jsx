@@ -1,7 +1,11 @@
 // src/components/CartDrawer.jsx
 import { fmt } from "../utils/formatters"; // You might need to move the fmt function to a utils file
+import { useNavigate, Link } from "react-router-dom";
 
 function CartDrawer({ isOpen, onClose, cart, cartCount, cartTotal, updateQty, removeFromCart }) {
+
+  const navigate = useNavigate();
+
   return (
     <>
       {/* Overlay */}
@@ -96,9 +100,12 @@ function CartDrawer({ isOpen, onClose, cart, cartCount, cartTotal, updateQty, re
               <span className="font-medium text-stone-900">{fmt(cartTotal)}</span>
             </div>
             <p className="text-[10px] text-stone-400">Shipping calculated at checkout</p>
-            <button className="w-full bg-stone-900 text-white text-sm py-3.5 rounded-full hover:bg-stone-700 transition-colors">
-              Checkout →
-            </button>
+            <Link to="/checkout">
+              <button className="w-full bg-stone-900 text-white text-sm py-3.5 rounded-full hover:bg-stone-700 transition-colors">
+                Checkout →
+              </button>
+            </Link>
+
           </div>
         )}
       </aside>
