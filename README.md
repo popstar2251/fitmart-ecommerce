@@ -1,512 +1,369 @@
-# 🏋️ FitMart: Online Fitness & Nutrition E-Commerce Platform
+<div align="center">
 
-> A comprehensive, high-performance B2C e-commerce ecosystem combining premium fitness hardware, specialized nutrition products, and digital coaching — all in one platform.
+<img 
+  src="https://raw.githubusercontent.com/parthnarkar/FitMart/main/client/public/logo.png" 
+  alt="FitMart" 
+  width="100"
+/>
 
-![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA-blue)
-![Stack](https://img.shields.io/badge/Stack-MERN-green)
-![Payment](https://img.shields.io/badge/Payment-Razorpay-0c2a5e)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-![Status](https://img.shields.io/badge/Status-In%20Development-orange)
+# FitMart
+
+### *Your All-in-One Fitness & Nutrition E-Commerce Platform*
+
+> A full-stack MERN e-commerce application combining premium fitness gear, nutrition products, and seamless payments — built for learning, collaboration, and real-world use.
+
+<br/>
+
+[![React](https://img.shields.io/badge/React-v19-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-v16+-339933?style=flat-square&logo=node.js)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
+[![Firebase](https://img.shields.io/badge/Firebase-Auth-FFCA28?style=flat-square&logo=firebase)](https://firebase.google.com/)
+[![Razorpay](https://img.shields.io/badge/Razorpay-Payments-0C2A5E?style=flat-square)](https://razorpay.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-In%20Development-orange?style=flat-square)]()
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
+
+<br/>
+
+[Quick Start](#-quick-start) | [Docs](#-api-reference) | [Contribute](CONTRIBUTING.md) | [Report Bug](https://github.com/parthnarkar/FitMart/issues) | [Request Feature](https://github.com/parthnarkar/FitMart/issues)
+
+</div>
 
 ---
 
-## 📋 Table of Contents
+## 📌 Table of Contents
 
-- [About the Project](#about-the-project)
-- [Key Features](#key-features)
-- [Tech Stack](#tech-stack)
-- [System Architecture](#system-architecture)
-- [Database Schema](#database-schema)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Environment Variables](#environment-variables)
-  - [Running the App](#running-the-app)
-- [API Overview](#api-overview)
-- [Revenue Model](#revenue-model)
-- [Roadmap](#roadmap)
-- [Team](#team)
-- [Contributing](#contributing)
-- [License](#license)
+- [About the Project](#-about-the-project)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Quick Start](#-quick-start)
+- [Environment Variables](#-environment-variables)
+- [Seeding the Database](#-seeding-the-database)
+- [Running the App](#-running-the-app)
+- [API Reference](#-api-reference)
+- [Data Models](#-data-models)
+- [Notes & Recommendations](#-notes--recommendations)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
 ## 🧠 About the Project
 
-FitMart is a full-stack e-commerce platform built for the modern fitness consumer. It goes beyond simple product sales by integrating **Digital Fitness Plans**, **AI-driven product recommendations**, and **subscription-based coaching** alongside physical product fulfillment.
+**FitMart** is a full-stack e-commerce web application built with the MERN stack. It's designed as both a **learning resource** and a **real-world starting point** for building modern storefronts.
 
-Built as an academic and entrepreneurial venture at **VESIT, Mumbai**, FitMart addresses the fragmented fitness market by consolidating equipment, nutrition, and personalized coaching into a single, secure digital storefront.
+The project covers end-to-end functionality including:
+- 🔐 User authentication via Firebase
+- 🛒 Cart management with stock reservation logic
+- 💳 Secure payments via Razorpay (with HMAC verification)
+- 📦 Order management with price snapshotting
 
-**Target Users:**
-- Fitness enthusiasts seeking authentic, curated products
-- Home-gym builders looking for end-to-end setup support
-- Corporate professionals who need fast, "one-click" health bundles
-- Beginners who want guided, goal-oriented shopping experiences
+Whether you're a beginner looking to learn full-stack development or an experienced developer who wants to contribute — **FitMart is built for you.**
 
 ---
 
-## ✨ Key Features
+## ✨ Features
 
 | Feature | Description |
 |---|---|
-| 🛒 **Integrated Wellness Dashboard** | Manage orders, subscriptions, and workout schedules from one interface |
-| 🔐 **Secure Payment Stack** | Razorpay integration with UPI, EMI, SSL encryption & 3D Secure auth |
-| 📦 **Smart Inventory Management** | Real-time stock tracking, automated reorder triggers via Zoho/ERPNext |
-| 🤖 **AI Recommendation Engine** | Personalized product suggestions based on fitness goals & purchase history |
-| 🏆 **FitRewards Loyalty Program** | Earn points on purchases AND fitness milestones; redeem for discounts |
-| 📱 **Mobile-First PWA** | Progressive Web App for seamless mobile experience |
-| 🔄 **Automated Order Fulfillment** | API-triggered logistics via Shiprocket; real-time WhatsApp/Email tracking |
-| 📊 **CRM-Driven Retention** | Automated email journeys via Zoho CRM to maximize customer LTV |
+| 🛍️ Product Catalog | Browse products with images, pricing, badges & metadata |
+| 🛒 Smart Cart | Cart with real-time stock reservation logic |
+| 📦 Order Management | Orders with price snapshotting at time of purchase |
+| 💳 Razorpay Payments | Secure order creation & HMAC payment verification |
+| 🔐 Firebase Auth | Email/password and Google Sign-In |
+| 🌱 Seed Script | One-command DB population with demo products |
+| 📱 PWA Ready | Progressive Web App support |
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-| Technology | Purpose |
-|---|---|
-| **React.js** | Component-based UI framework |
-| **Tailwind CSS** | Utility-first responsive styling |
-| **HTML5 / JavaScript** | Page structure & client-side interactivity |
+- **React v19** + **Vite** — fast dev experience
+- **Tailwind CSS** — utility-first styling
+- **Firebase Authentication** — client-side auth
 
 ### Backend
-| Technology | Purpose |
-|---|---|
-| **Node.js** | Server-side runtime environment |
-| **Express.js** | RESTful API framework & routing |
+- **Node.js** + **Express** — REST API
+- **Mongoose** — MongoDB ODM
+- **Razorpay SDK** — payment processing
 
-### Database
-| Technology | Purpose |
-|---|---|
-| **MongoDB** | NoSQL database for users, products, orders, subscriptions |
-| **Mongoose (ODM)** | Schema-based data modeling for MongoDB |
-
-### Authentication & Security
-| Technology | Purpose |
-|---|---|
-| **Firebase Authentication** | Email/password login with JWT token management |
-| **SSL / HTTPS** | Encrypted communication across all endpoints |
-| **Cloudflare** | DDoS protection and CDN for fast, secure content delivery |
-
-### Payments & Integrations
-| Technology | Purpose |
-|---|---|
-| **Razorpay** | UPI, credit/debit card, net banking, EMI processing |
-| **Zoho CRM / ERPNext** | Customer data, order lifecycle, inventory management |
-| **Shiprocket / Delhivery** | Last-mile logistics & shipment tracking |
-| **AWS** | Cloud hosting with auto-scaling and high availability |
-
-### Dev Tools
-| Tool | Purpose |
-|---|---|
-| **VS Code** | Primary code editor |
-| **Git & GitHub** | Version control and source code management |
-
----
-
-## 🏗️ System Architecture
-
-FitMart follows a **cloud-based, multi-tier architecture**:
-
-```
-┌─────────────────────────────────────────────┐
-│               CLIENT LAYER                   │
-│    Browser / PWA (React.js + Tailwind CSS)   │
-└──────────────────────┬──────────────────────┘
-                       │ HTTPS Requests
-┌──────────────────────▼──────────────────────┐
-│              BACKEND LAYER                   │
-│        Node.js + Express.js API Server       │
-│  (Auth, Orders, Payments, Subscriptions)     │
-└─────┬──────────┬──────────────┬─────────────┘
-      │          │              │
-┌─────▼───┐  ┌───▼──────┐  ┌───▼─────────────┐
-│ MongoDB │  │ Firebase │  │ Third-Party APIs │
-│   DB    │  │  Auth    │  │ Razorpay, Zoho,  │
-│         │  │          │  │ Shiprocket, AWS  │
-└─────────┘  └──────────┘  └─────────────────┘
-```
-
-**Key Design Principles:**
-- Frontend never directly accesses the database — all reads/writes go through the API server
-- Independent scaling of frontend and backend layers
-- PCI-DSS compliant payment handling — no card data stored locally
-- Cloudflare CDN sits in front of all static assets for speed and DDoS resilience
-
----
-
-## 🗄️ Database Schema
-
-FitMart uses a **normalized relational-style schema** implemented in MongoDB with Mongoose ODM.
-
-### Core Collections
-
-```
-Users
-├── _id, name, email, passwordHash
-├── role (customer/admin), createdAt
-└── → Orders[], Subscriptions[]
-
-Products
-├── _id, name, brand, price, description
-├── category_id → Categories
-├── isAvailable, images[]
-└── → Inventory (1:1)
-
-Categories
-└── _id, name, description
-
-Inventory
-├── product_id → Products
-├── quantityAvailable, reorderLevel
-└── lastUpdated
-
-Orders
-├── _id, user_id → Users
-├── orderDate, totalAmount, status
-└── → OrderItems[]
-
-OrderItems
-├── order_id → Orders
-├── product_id → Products
-└── quantity, unitPrice
-
-Payments
-├── order_id → Orders
-├── transactionId (Razorpay), method
-├── status (success/failed/pending)
-└── paymentDate
-
-FitnessPlans
-├── _id, planName, description
-├── durationDays, price
-└── → Subscriptions[]
-
-Subscriptions
-├── user_id → Users
-├── plan_id → FitnessPlans
-├── startDate, endDate
-└── status (active/expired/cancelled)
-
-Admins
-└── _id, name, email, passwordHash, role
-```
+### Database & Services
+- **MongoDB** (Atlas or local)
+- **Firebase** (Auth)
+- **Razorpay** (Payments)
 
 ---
 
 ## 📁 Project Structure
 
 ```
-fitmart/
-│
-├── client/                         # React.js Frontend
-│   ├── public/
+FitMart/
+├── client/                   # React + Vite Frontend
 │   ├── src/
-│   │   ├── components/             # Reusable UI components
-│   │   │   ├── Navbar/
-│   │   │   ├── ProductCard/
-│   │   │   ├── Cart/
-│   │   │   └── Dashboard/
-│   │   ├── pages/                  # Route-level pages
-│   │   │   ├── Home.jsx
-│   │   │   ├── Shop.jsx
-│   │   │   ├── ProductDetail.jsx
-│   │   │   ├── Checkout.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   └── Auth/
-│   │   ├── context/                # React Context (Cart, Auth)
-│   │   ├── hooks/                  # Custom React hooks
-│   │   ├── services/               # API call functions (Axios)
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── tailwind.config.js
+│   │   ├── components/       # Reusable UI components
+│   │   ├── pages/            # Route-level pages
+│   │   ├── auth/             # Firebase auth helpers
+│   │   └── utils/        # Helper functions
+│   ├── public/               # Static assets
 │   └── package.json
 │
-├── server/                         # Node.js + Express Backend
-│   ├── config/
-│   │   ├── db.js                   # MongoDB connection
-│   │   └── firebase.js             # Firebase Admin SDK setup
-│   ├── models/                     # Mongoose models
-│   │   ├── User.js
-│   │   ├── Product.js
-│   │   ├── Order.js
-│   │   ├── Payment.js
-│   │   ├── Inventory.js
-│   │   ├── FitnessPlan.js
-│   │   └── Subscription.js
-│   ├── routes/                     # Express route handlers
-│   │   ├── auth.routes.js
-│   │   ├── product.routes.js
-│   │   ├── order.routes.js
-│   │   ├── payment.routes.js
-│   │   └── subscription.routes.js
-│   ├── controllers/                # Business logic
-│   ├── middleware/
-│   │   ├── authMiddleware.js       # Firebase token verification
-│   │   └── errorHandler.js
-│   ├── utils/
-│   ├── .env.example
-│   ├── server.js
-│   └── package.json
+├── server/                   # Node.js + Express Backend
+│   ├── models/               # Mongoose models (Product, Cart, Order)
+│   ├── routes/               # Express routes (products, cart, orders, payment)
+│   ├── db.js                 # MongoDB connection helper
+│   ├── index.js              # Server entry point
+│   └── seed.js               # DB seed script
 │
-├── .gitignore
-├── README.md
-└── package.json                    # Root (optional monorepo scripts)
+├── CONTRIBUTING.md           # Contributor guide
+└── README.md
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-Make sure you have the following installed:
+Make sure you have these installed:
 
-- [Node.js](https://nodejs.org/) (v18 or above)
-- [npm](https://www.npmjs.com/) (v9 or above)
-- [MongoDB](https://www.mongodb.com/) (local instance or MongoDB Atlas)
-- A [Razorpay](https://razorpay.com/) account (for payment integration)
-- A [Firebase](https://firebase.google.com/) project (for authentication)
+- [Node.js](https://nodejs.org/) v16+
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- A [MongoDB](https://www.mongodb.com/atlas) connection (Atlas or local)
+- A [Firebase](https://firebase.google.com/) project (for auth)
+- A [Razorpay](https://razorpay.com/) account (for payments)
 
 ---
 
-### Installation
-
-**1. Clone the repository**
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/fitmart.git
-cd fitmart
+git clone https://github.com/parthnarkar/FitMart.git
+cd FitMart
 ```
 
-**2. Install server dependencies**
+### 2. Set Up the Server
 
 ```bash
 cd server
 npm install
 ```
 
-**3. Install client dependencies**
+Create a `.env` file in the `server/` folder (see [Environment Variables](#-environment-variables)):
 
 ```bash
-cd ../client
-npm install
+cp .env.example .env   # if available, or create manually
 ```
 
----
-
-### Environment Variables
-
-Create a `.env` file inside the `server/` directory. Use `.env.example` as a template:
-
-```env
-# Server
-PORT=5000
-NODE_ENV=development
-
-# MongoDB
-MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/fitmart
-
-# Firebase Admin SDK
-FIREBASE_PROJECT_ID=your_project_id
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
-FIREBASE_CLIENT_EMAIL=firebase-adminsdk@your_project.iam.gserviceaccount.com
-
-# Razorpay
-RAZORPAY_KEY_ID=rzp_test_XXXXXXXXXXXXXXXX
-RAZORPAY_KEY_SECRET=your_razorpay_secret
-
-# JWT / Session (if applicable)
-JWT_SECRET=your_super_secret_key
-
-# Cloudflare / AWS (optional for production)
-CDN_BASE_URL=https://cdn.fitmart.in
-```
-
-Create a `.env` file inside the `client/` directory:
-
-```env
-VITE_API_BASE_URL=http://localhost:5000/api
-VITE_RAZORPAY_KEY_ID=rzp_test_XXXXXXXXXXXXXXXX
-VITE_FIREBASE_API_KEY=your_firebase_web_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-```
-
-> ⚠️ **Never commit your `.env` files.** They are already included in `.gitignore`.
-
----
-
-### Running the App
-
-**Development mode (run both frontend & backend):**
-
-In one terminal, start the backend:
+Seed the database with sample products:
+ 
 ```bash
-cd server
+npm run seed
+```
+
+Start the backend dev server:
+
+```bash
 npm run dev
 ```
 
-In another terminal, start the frontend:
+> The server runs at **http://localhost:5000** by default.
+
+---
+
+### 3. Set Up the Client
+
+Open a **new terminal** and run:
+
 ```bash
 cd client
-npm run dev
+npm install
 ```
 
-The React app will be available at `http://localhost:5173` and the API server at `http://localhost:5000`.
-
----
-
-### Recent Backend & Client Updates (2026-03-04)
-
-- **Backend added:** a Node/Express backend now lives in the `server/` folder (Mongoose + MongoDB).
-   - `server/models/Product.js` defines the `Product` schema and includes an `image` field (string) for product images.
-   - CRUD routes are exposed under `/api/products` (`GET /api/products`, `GET /api/products/:id`, `POST`, `PUT`, `DELETE`).
-   - The MongoDB connector (`server/db.js`) supports an optional `MONGO_DB` environment variable and logs the connected database and host on startup.
-   - A seed script is provided at `server/seed.js` to insert the mock product fixtures into the database. To target a specific DB in Atlas, add `MONGO_DB=fitmart` (or your desired name) to `server/.env` and run the seed script.
-
-- **JSON safety & error handling:** the server includes JSON parse error middleware to return a clean `400` response for malformed JSON payloads (helps debugging bad requests).
-
-- **Client changes:** `client/src/pages/HomePage.jsx` now fetches products from the API (`/api/products`) instead of using inline mock arrays. Product items returned from the API include the `image` field and the front-end renders `product.image` where available.
-   - Ensure `client/.env` (or `VITE_API_BASE_URL`) points to the backend API (e.g. `http://localhost:5000/api`) or configure the Vite proxy in `client/vite.config.js` if you prefer a dev proxy.
-
-- **Dev commands (quick):**
+Create a `.env` file in the `client/` folder (see [Environment Variables](#-environment-variables)):
 
 ```bash
-# run backend in dev mode (from project root or server/)
-cd server
-npm run dev
-
-# seed DB (from server/)
-npm run seed
-
-# run frontend dev server (from client/)
-cd ../client
 npm run dev
 ```
 
-- **Notes & recommendations:**
-   - If your seeded data does not appear in Atlas, confirm `MONGO_DB` in `server/.env` — without it the default DB may be used (e.g. `test`).
-   - Consider replacing the seed script with an idempotent upsert variant when re-running frequently to avoid destructive deletes.
-
-
-## 📡 API Overview
-
-All API routes are prefixed with `/api`.
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | Register a new user | No |
-| `POST` | `/api/auth/login` | Login with Firebase token | No |
-| `GET` | `/api/products` | Fetch all products | No |
-| `GET` | `/api/products/:id` | Fetch single product | No |
-| `GET` | `/api/products?category=supplements` | Filter by category | No |
-| `POST` | `/api/orders` | Place a new order | Yes |
-| `GET` | `/api/orders/:userId` | Get user's order history | Yes |
-| `POST` | `/api/payments/create-order` | Create Razorpay order | Yes |
-| `POST` | `/api/payments/verify` | Verify payment signature | Yes |
-| `GET` | `/api/plans` | List all fitness plans | No |
-| `POST` | `/api/subscriptions` | Subscribe to a fitness plan | Yes |
-| `GET` | `/api/subscriptions/:userId` | Get user's active subscriptions | Yes |
-| `GET` | `/api/admin/inventory` | View inventory (admin only) | Admin |
-| `PUT` | `/api/admin/inventory/:productId` | Update stock level (admin only) | Admin |
-
-> Full API documentation will be available via Postman collection (link TBD).
+> The client runs at **http://localhost:5173** by default.
 
 ---
 
-## 💰 Revenue Model
+## 🔑 Environment Variables
 
-FitMart operates a **diversified revenue strategy**:
+> ⚠️ **Never commit your `.env` files or API secrets to GitHub!** They are already in `.gitignore`.
 
-| Stream | Details | Margin |
-|---|---|---|
-| **DTC Product Sales** | Supplements, equipment, wearables | 20–45% |
-| **Digital Fitness Subscriptions** | Pro (₹499/mo), Elite (₹1,499/mo) | 85–95% |
-| **Service & AMC Fees** | Post-purchase maintenance on gym machinery | Variable |
-| **Affiliate & Brand Partnerships** | Featured brand placements | Commission-based |
+### Server — `server/.env`
 
-### Subscription Tiers
+```env
+MONGO_URI=<your_mongodb_connection_string>
+MONGO_DB=<your_database_name>           # optional
+PORT=5000
+RAZORPAY_KEY_ID=<your_razorpay_key_id>
+RAZORPAY_KEY_SECRET=<your_razorpay_key_secret>
+```
 
-| Tier | Price | Benefits |
-|---|---|---|
-| **Freemium** | Free | Store access + public workout blogs |
-| **Pro** | ₹499/month | Personalized nutrition plans + 5% discount on all products |
-| **Elite** | ₹1,499/month | 1-on-1 digital coaching + early access to limited equipment drops |
+### Client — `client/.env`
 
----
+```env
+VITE_API_URL=http://localhost:5000
+VITE_RAZORPAY_KEY_ID=<your_razorpay_key_id>
 
-## 🗺️ Roadmap
-
-- [x] Project planning & architecture design
-- [x] Database schema design
-- [x] Tech stack finalization
-- [ ] **Q1** — Domain setup, Shopify/WooCommerce config, Zoho CRM integration
-- [ ] **Q2** — Vendor onboarding, initial Digital Fitness Plan content
-- [ ] **Q3** — Beta launch (VESIT network), payment gateway & logistics testing
-- [ ] **Q4** — Full Mumbai launch, Meta/Google Ads, target 10k+ active users
-- [ ] **Year 2** — Mobile app (iOS/Android), break-even, CRM optimization
-- [ ] **Year 3** — Expansion to Pune, Bangalore, Hyderabad; private-label equipment
-- [ ] **Year 4** — Wearable API integration (Apple Health, Google Fit)
-- [ ] **Year 5** — FitMart Experience Centers (offline kiosks), preventive healthcare market entry
+# Firebase config (from your Firebase project settings)
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_MEASUREMENT_ID=
+```
 
 ---
 
-## 👥 Team
+## 🌱 Seeding the Database
 
-| Role | Responsibilities |
-|---|---|
-| **CEO** | Vision, market strategy, brand partnerships |
-| **CTO** | Full-stack development, cybersecurity, API integrations |
-| **CMO** | Digital marketing, Google/Meta campaigns, growth |
-| **Lead Web Architect** | Backend stability, database management (MongoDB) |
-| **Logistics Coordinator** | Supply chain, vendor relations, last-mile delivery |
-| **Content & Fitness Specialist** | Digital fitness plans, supplement authenticity verification |
-| **Customer Success Executive** | Zoho CRM, refund handling, live chat support |
-| **Cybersecurity Consultant** | Penetration testing, business continuity audits |
+The seed script populates your MongoDB with sample fitness products:
+
+```bash
+cd server
+npm run seed
+```
+
+Each product includes: `productId`, `name`, `brand`, `category`, `price`, `originalPrice`, `rating`, `reviews`, `badge`, `image`, `stock`, and `reserved`.
+
+---
+
+## ▶️ Running the App
+
+### Development
+
+```bash
+# Terminal 1 — Backend
+cd server && npm run dev
+
+# Terminal 2 — Frontend
+cd client && npm run dev
+```
+
+### Production
+
+```bash
+# Build the frontend
+cd client && npm run build
+
+# Start the server
+cd server && npm start
+```
+
+---
+
+## 📡 API Reference
+
+**Base URL:** `http://localhost:5000` (or your `VITE_API_URL`)
+
+### 🛍️ Products
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/products` | List all products (sorted by `productId`) |
+| `GET` | `/api/products/:id` | Get product by `productId` |
+| `POST` | `/api/products` | Create a new product |
+| `PUT` | `/api/products/:id` | Update product by `productId` |
+| `DELETE` | `/api/products/:id` | Delete product by `productId` |
+
+### 🛒 Cart
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/cart/:userId` | Get or create a user's cart |
+| `POST` | `/api/cart/:userId/add` | Add item — body: `{ productId, quantity }` |
+| `POST` | `/api/cart/:userId/remove` | Remove item — body: `{ productId, quantity }` |
+| `DELETE` | `/api/cart/:userId` | Clear cart and release reserved stock |
+
+### 📦 Orders
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/orders` | Create order — body: `{ userId, items? }` |
+| `GET` | `/api/orders/:userId` | List all orders for a user |
+
+### 💳 Payments
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/create-order` | Create a Razorpay order |
+| `POST` | `/verify-payment` | Verify HMAC signature |
+| `POST` | `/clear-cart` | Release stock & clear cart — body: `{ userId }` |
+| `POST` | `/demo-success` | Simulate successful payment (testing only) |
+
+> **Security:** Payment verification uses HMAC-SHA256 on `razorpay_order_id|razorpay_payment_id` with `RAZORPAY_KEY_SECRET`.
+
+---
+
+## 🗃️ Data Models
+
+### Product
+```js
+{
+  productId:     Number (unique, required),
+  name:          String,
+  brand:         String,
+  category:      String,
+  price:         Number (required),
+  originalPrice: Number,
+  rating:        Number,
+  reviews:       Number,
+  badge:         String,
+  image:         String,   // URL
+  stock:         Number | null,
+  reserved:      Number    // quantity reserved in carts
+}
+```
+
+### Cart
+```js
+{
+  userId: String (indexed),
+  items: [{ productId, quantity }]
+}
+```
+
+### Order
+```js
+{
+  userId: String,
+  items:  [{ productId, quantity, price }],  // price snapshotted at purchase
+  total:  Number,
+  status: String
+}
+```
+
+---
+
+## 📝 Notes & Recommendations
+
+- **API URL consistency** — Some client files still use the hardcoded `http://localhost:5000`. It's recommended to standardize everything on `VITE_API_URL`. This is a great first contribution!
+- **Cart reservation** — `Product.reserved` increments on cart add and decrements on cart remove/clear. Orders finalize the reservation but don't re-release it.
+- **Razorpay** — Always verify payments server-side. Never expose `RAZORPAY_KEY_SECRET` to the client.
+- **Firebase** — Only client-facing Firebase config keys go in the Vite `.env.local`. Never put service account credentials there.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how to get started:
+We love contributions! FitMart is an open-source, community-driven project and contributions of all kinds are welcome — from fixing typos to building new features.
 
-1. **Fork** the repository
-2. **Create** your feature branch:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. **Commit** your changes with a descriptive message:
-   ```bash
-   git commit -m "feat: add product recommendation engine"
-   ```
-4. **Push** to your branch:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-5. **Open a Pull Request** and describe what you've changed
+Please read our **[CONTRIBUTING.md](CONTRIBUTING.md)** for a full guide on:
+- How to set up your development environment
+- How to pick and work on issues
+- How to submit a Pull Request
+- Code style and commit conventions
 
-### Commit Message Convention
-We follow [Conventional Commits](https://www.conventionalcommits.org/):
-- `feat:` — new feature
-- `fix:` — bug fix
-- `docs:` — documentation changes
-- `style:` — formatting, no logic change
-- `refactor:` — code restructure without feature change
-- `test:` — adding or updating tests
-
----
-
-## 🔒 Security
-
-FitMart takes security seriously. If you discover a vulnerability, please **do not open a public issue**. Instead, email the security team directly.
-
-- All transactions are SSL/TLS encrypted
-- Payment data is processed through PCI-DSS compliant Razorpay — no card data is stored on our servers
-- Firebase handles authentication tokens securely
-- Regular penetration testing is performed by our cybersecurity consultant
-- Cloudflare provides DDoS mitigation at the network edge
+**New to open source?** Look for issues labelled [`good first issue`](https://github.com/parthnarkar/FitMart/labels/good%20first%20issue) — they're perfect starting points! 🌱
 
 ---
 
@@ -517,6 +374,9 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ---
 
 <div align="center">
-  <p>Built with ❤️ at <strong>VESIT, Mumbai</strong></p>
-  <p>FitMart © 2026 — Redefining Fitness Commerce</p>
+
+Made with ❤️ by [Parth Narkar](https://github.com/parthnarkar) and the [Parth Builds Community](https://www.instagram.com/parth.builds/)
+
+⭐ **Star this repo** if you find it useful — it means a lot!
+
 </div>
