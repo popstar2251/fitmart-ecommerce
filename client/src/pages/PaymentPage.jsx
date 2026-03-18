@@ -1,10 +1,13 @@
 // src/pages/PaymentPage.jsx
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { auth } from "../auth/firebase";          // ← Firebase auth instance
+import { auth } from "../auth/firebase";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID;
+
+// ── Show the demo bypass button only in development ────────────────────────
+const IS_DEV = import.meta.env.DEV;
 
 // ── Load Razorpay checkout.js once ────────────────────────────────────────
 function useRazorpayScript() {
@@ -27,28 +30,62 @@ export default function PaymentPage() {
   const rzpReady = useRazorpayScript();
 
   const [paying, setPaying] = useState(false);
+  const [bypassing, setBypassing] = useState(false);
   const [error, setError] = useState(null);
 
-  // ── Guard: must arrive via navigate("/payment", { state: { items, total } })
   const { items = [], total = 0 } = location.state || {};
   useEffect(() => {
     if (!items.length) navigate("/checkout");
   }, [items, navigate]);
 
+  // ── Shared: clear cart then go to confirmation ─────────────────────────
+  const finishOrder = async (userId, paymentId) => {
+    await fetch(`${API}/clear-cart`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ userId }),
+    });
+    navigate("/payment-confirmation", {
+      state: { items, total, paymentId },
+    });
+  };
+
+  // ── DEMO BYPASS: skip Razorpay entirely ───────────────────────────────
+  // Calls /demo-success on the backend which fakes a verified payment,
+  // clears the cart, then redirects to confirmation.
+  const handleDemoSuccess = async () => {
+    const user = auth.currentUser;
+    if (!user) { navigate("/auth"); return; }
+    setBypassing(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`${API}/demo-success`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ userId: user.uid }),
+      });
+      if (!res.ok) throw new Error("Demo order failed");
+      const data = await res.json();
+      await finishOrder(user.uid, data.paymentId);
+    } catch (err) {
+      setError(err.message);
+      setBypassing(false);
+    }
+  };
+
+  // ── REAL PAYMENT: full Razorpay flow ──────────────────────────────────
   const handlePay = async () => {
     if (!rzpReady) { setError("Payment SDK not loaded. Please refresh."); return; }
-
-    // Get Firebase UID directly — same UID stored in cart.userId in MongoDB
     const user = auth.currentUser;
     if (!user) { navigate("/auth"); return; }
     const userId = user.uid;
-
     setPaying(true);
     setError(null);
 
     try {
-      // STEP 1 — Create Razorpay order on backend
-      // No /api prefix — mounted as app.use(paymentRoutes) in index.js
       const orderRes = await fetch(`${API}/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,9 +97,7 @@ export default function PaymentPage() {
         throw new Error(errBody.error || "Could not create order");
       }
       const order = await orderRes.json();
-      // order = { id, amount (paise), currency }
 
-      // STEP 2 — Open Razorpay modal
       const options = {
         key: RAZORPAY_KEY,
         amount: order.amount,
@@ -76,7 +111,6 @@ export default function PaymentPage() {
         },
         theme: { color: "#1c1917" },
 
-        // STEP 3 — On success: verify → clear cart → redirect
         handler: async (response) => {
           try {
             const verifyRes = await fetch(`${API}/verify-payment`, {
@@ -86,17 +120,7 @@ export default function PaymentPage() {
               body: JSON.stringify({ ...response, userId }),
             });
             if (!verifyRes.ok) throw new Error("Payment verification failed");
-
-            await fetch(`${API}/clear-cart`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "include",
-              body: JSON.stringify({ userId }),
-            });
-
-            navigate("/payment-confirmation", {
-              state: { items, total, paymentId: response.razorpay_payment_id },
-            });
+            await finishOrder(userId, response.razorpay_payment_id);
           } catch (err) {
             setError(err.message);
             setPaying(false);
@@ -106,7 +130,7 @@ export default function PaymentPage() {
         modal: {
           ondismiss: () => {
             setPaying(false);
-            setError("Payment was cancelled. You can try again.");
+            setError("Payment was cancelled. Use the button below to simulate success.");
           },
         },
       };
@@ -123,6 +147,8 @@ export default function PaymentPage() {
       setPaying(false);
     }
   };
+
+  const busy = paying || bypassing;
 
   return (
     <div className="min-h-screen bg-stone-50" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -173,17 +199,17 @@ export default function PaymentPage() {
           </div>
         </div>
 
-        {/* Error */}
+        {/* Error banner */}
         {error && (
           <div className="bg-red-50 border border-red-100 rounded-2xl px-5 py-4 mb-5">
             <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
 
-        {/* Pay button */}
+        {/* Real Pay button */}
         <button
           onClick={handlePay}
-          disabled={paying || !rzpReady}
+          disabled={busy || !rzpReady}
           className="w-full bg-stone-900 text-white text-sm px-8 py-3.5 rounded-full
                      hover:bg-stone-700 transition-colors disabled:opacity-50
                      disabled:cursor-not-allowed flex items-center justify-center gap-2"
@@ -202,9 +228,42 @@ export default function PaymentPage() {
           100% secure · powered by Razorpay
         </p>
 
+        {/* ── Demo bypass button (always visible for testing) ── */}
+        <div className="mt-6">
+          {/* Subtle divider */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex-1 h-px bg-stone-200" />
+            <span className="text-[10px] tracking-[0.15em] uppercase text-stone-400">
+              Demo / Testing
+            </span>
+            <div className="flex-1 h-px bg-stone-200" />
+          </div>
+
+          <button
+            onClick={handleDemoSuccess}
+            disabled={busy}
+            className="w-full border border-stone-300 text-stone-600 text-sm px-8 py-3.5
+                       rounded-full hover:bg-stone-900 hover:text-white hover:border-stone-900
+                       transition-all disabled:opacity-50 disabled:cursor-not-allowed
+                       flex items-center justify-center gap-2"
+          >
+            {bypassing ? (
+              <>
+                <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                Processing…
+              </>
+            ) : (
+              "Simulate Successful Payment ✓"
+            )}
+          </button>
+          <p className="text-[10px] text-stone-400 text-center mt-2">
+            Skips Razorpay · clears cart · goes to confirmation
+          </p>
+        </div>
+
         <button
           onClick={() => navigate("/checkout")}
-          className="w-full mt-3 border border-stone-200 text-stone-500 text-sm
+          className="w-full mt-4 border border-stone-200 text-stone-400 text-sm
                      px-8 py-3 rounded-full hover:bg-stone-100 transition-colors"
         >
           ← Back to cart

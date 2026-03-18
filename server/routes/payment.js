@@ -123,4 +123,34 @@ router.post("/clear-cart", async (req, res) => {
 });
 
 
+// ─────────────────────────────────────────────────────────────────────────────
+// POST /demo-success
+// Body: { userId }
+// FOR TESTING ONLY — simulates a verified payment without going through Razorpay.
+// Generates a fake paymentId, clears the cart, and returns success.
+// Remove this route (or gate it behind NODE_ENV check) before going live.
+// ─────────────────────────────────────────────────────────────────────────────
+router.post("/demo-success", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ error: "userId is required" });
+
+    // Generate a fake payment ID that looks like a real Razorpay one
+    const fakePaymentId = `pay_DEMO_${Date.now()}`;
+
+    // Clear the cart exactly like a real payment would
+    await Cart.findOneAndUpdate(
+      { userId },
+      { $set: { items: [] } },
+      { new: true }
+    );
+
+    res.json({ success: true, paymentId: fakePaymentId });
+  } catch (err) {
+    console.error("demo-success error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 module.exports = router;
