@@ -56,6 +56,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use("/api/reports", require("./routes/reports"));
 app.use("/api/chat", require("./routes/chat"));
 app.use("/api/user", require("./routes/user"));
+app.use("/api/customers", require("./routes/customers"));
 
 // ── Razorpay / payment routes (NO prefix — mounted at root) ─────────────────
 // These handle:  POST /create-order
