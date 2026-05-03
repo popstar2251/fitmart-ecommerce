@@ -153,7 +153,12 @@ export default function Navbar({
                       tabIndex={0}
                     >
                       {user.photoURL ? (
-                        <img src={user.photoURL} alt={user.displayName ? `${user.displayName}'s avatar` : "User avatar"} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        <img
+                          src={user.photoURL}
+                          alt={user.displayName || "User profile picture"}
+                          className="w-full h-full object-cover"
+                          referrerPolicy="no-referrer"
+                        />
                       ) : (
                         <span className={`text-[11px] font-medium ${isLanding && !navOpaque ? "text-stone-700" : "text-stone-600"}`} aria-hidden>
                           {(user.displayName?.[0] || user.email?.[0] || "U").toUpperCase()}
