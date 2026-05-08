@@ -44,18 +44,26 @@ router.post('/', upload.single('screenshot'), async (req, res) => {
     }
 
     let screenshotUrl = '';
+    let screenshotPublicId = '';
     if (req.file && req.file.buffer) {
       try {
-        // wrap upload_stream in a promise
         const result = await new Promise((resolve, reject) => {
-          const stream = cloudinary.uploader.upload_stream({ folder: 'fitmart-bugs', resource_type: 'image' }, (error, result) => {
-            if (error) return reject(error);
-            resolve(result);
-          });
+          const stream = cloudinary.uploader.upload_stream(
+            {
+              folder: 'fitmart/bugs',
+              resource_type: 'image',
+            },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result);
+            }
+          );
+
           streamifier.createReadStream(req.file.buffer).pipe(stream);
         });
 
         screenshotUrl = result.secure_url || '';
+        screenshotPublicId = result.public_id || '';
       } catch (uploadErr) {
         console.error('Cloudinary upload failed:', uploadErr);
         return res.status(500).json({ error: 'Failed to upload screenshot' });
@@ -72,6 +80,7 @@ router.post('/', upload.single('screenshot'), async (req, res) => {
       reporterEmail,
       screenshot: '',
       screenshotUrl,
+      screenshotPublicId,
     });
 
     await bug.save();
