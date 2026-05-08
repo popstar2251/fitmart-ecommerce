@@ -14,6 +14,7 @@ const BugSchema = new mongoose.Schema(
     screenshot: { type: String, default: '' }, // previously relative path under /uploads/bugs/
     // new Cloudinary-hosted URL
     screenshotUrl: { type: String, default: '' },
+    screenshotPublicId: { type: String, default: '' },
     status: { type: String, enum: ['open', 'in-progress', 'resolved'], default: 'open' },
   },
   { timestamps: true }
