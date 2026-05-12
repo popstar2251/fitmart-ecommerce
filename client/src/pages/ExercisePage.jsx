@@ -74,14 +74,14 @@ export default function ExercisePage() {
     }
   };
 
-  const handleExerciseSelect = (exercise) => {
+  const handleExerciseSelect = async (exercise) => {
     if (!selectedDate) {
       alert("No date selected. Please go back and select a date first.");
       return;
     }
 
     // Add exercise to the workout
-    addExerciseToWorkout(selectedDate, exercise);
+    await addExerciseToWorkout(selectedDate, exercise);
 
     // Navigate back to notes page
     localStorage.setItem("selectedDate", selectedDate);
