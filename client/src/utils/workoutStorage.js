@@ -99,9 +99,17 @@ export const removeExerciseFromWorkout = async (date, exerciseId) => {
  */
 export const getAllWorkoutEvents = async () => {
   const logs = await getWorkoutLogs();
-  return Object.keys(logs).map(date => ({
-    title: logs[date].title || 'Logged Workout',
-    date: date,
-    allDay: true,
-  }));
+  return Object.keys(logs)
+    .filter(date => {
+      const log = logs[date];
+      // A workout is "valid" if it has a title, notes, or at least one exercise
+      return (log.title && log.title.trim() !== "") ||
+             (log.notes && log.notes.trim() !== "") ||
+             (log.exercises && log.exercises.length > 0);
+    })
+    .map(date => ({
+      title: logs[date].title || 'Logged Workout',
+      date: date,
+      allDay: true,
+    }));
 };

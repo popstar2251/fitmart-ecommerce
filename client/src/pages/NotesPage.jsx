@@ -63,10 +63,23 @@ export default function NotesPage() {
     }, 1000);
   };
 
-  const handleAddExercise = () => {
-    // Note: We don't save here — user can add exercises and navigation back will reload from storage
+  const handleAddExercise = async () => {
+    // Save draft state to backend
+    await saveWorkout({ date, title: title || "", notes: notes || "", exercises });
+    
+    // Determine suggested category
+    const combinedText = `${title} ${notes}`.toLowerCase();
+    let suggestedCategory = "chest"; // default
+    if (combinedText.includes("back") || combinedText.includes("pull") || combinedText.includes("lat")) suggestedCategory = "back";
+    else if (combinedText.includes("leg") || combinedText.includes("squat") || combinedText.includes("lower")) suggestedCategory = "legs";
+    else if (combinedText.includes("arm") || combinedText.includes("bicep") || combinedText.includes("tricep")) suggestedCategory = "arms";
+    else if (combinedText.includes("shoulder") || combinedText.includes("delt")) suggestedCategory = "shoulders";
+    else if (combinedText.includes("abs") || combinedText.includes("core")) suggestedCategory = "abs";
+    else if (combinedText.includes("cardio") || combinedText.includes("run")) suggestedCategory = "cardio";
+    else if (combinedText.includes("chest") || combinedText.includes("push") || combinedText.includes("pec")) suggestedCategory = "chest";
+
     localStorage.setItem("selectedDate", date);
-    navigate("/exercises");
+    navigate("/exercises", { state: { suggestedCategory } });
   };
 
   const handleRemoveExercise = async (exerciseId) => {
