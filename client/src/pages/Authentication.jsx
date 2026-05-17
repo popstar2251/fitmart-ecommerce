@@ -437,8 +437,22 @@ export default function Authentication() {
 
               <p className="text-[11px] text-stone-400 text-center leading-relaxed">
                 By creating an account you agree to our{" "}
-                <span className="underline cursor-pointer">Terms</span> and{" "}
-                <span className="underline cursor-pointer">Privacy Policy</span>.
+                <button
+                  type="button"
+                  onClick={() => navigate("/terms")}
+                  className="underline cursor-pointer"
+                >
+                  Terms
+                </button>
+                {" "}and{" "}
+                <button
+                  type="button"
+                  onClick={() => navigate("/privacy-policy")}
+                  className="underline cursor-pointer"
+                >
+                  Privacy Policy
+                </button>
+                .
               </p>
             </form>
           )}
