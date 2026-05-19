@@ -41,7 +41,6 @@ router.get('/:userId', verifyFirebaseToken, ensureCartOwnership, async (req, res
  * @access  Private
  */
 router.post('/:userId/add', verifyFirebaseToken, ensureCartOwnership, validateRequest(cartAddSchema), async (req, res) => {
-  if (!checkOwnership(req, res)) return;
 
   try {
     const { userId } = req.params;
@@ -83,7 +82,6 @@ router.post('/:userId/add', verifyFirebaseToken, ensureCartOwnership, validateRe
  * @access  Private
  */
 router.post('/:userId/remove', verifyFirebaseToken, ensureCartOwnership, validateRequest(cartRemoveSchema), async (req, res) => {
-  if (!checkOwnership(req, res)) return;
 
   try {
     const { userId } = req.params;
