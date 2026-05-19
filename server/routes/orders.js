@@ -16,7 +16,7 @@ const ensureOrderOwnership = ensureOwnership('Forbidden — you can only view yo
  *          body: { userId, items?: [{ productId, quantity }] }
  * @access  Private
  */
-router.post('/', verifyFirebaseToken, async (req, res) => {
+router.post('/', verifyFirebaseToken, validateRequest(createOrderSchema), async (req, res) => {
   const { userId, items } = req.body;
 
   if (!userId) return res.status(400).json({ error: 'userId required' });

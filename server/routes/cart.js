@@ -6,7 +6,6 @@ const verifyFirebaseToken = require('../middleware/verifyFirebaseToken');
 const ensureOwnership = require('../middleware/ownership');
 const validateRequest = require('../middleware/validateRequest');
 const { cartAddSchema, cartRemoveSchema } = require('../validation/requestSchemas');
-
 const ensureCartOwnership = ensureOwnership('Forbidden — you can only access your own cart');
 
 // Helper: adjust product reserved count
@@ -42,6 +41,8 @@ router.get('/:userId', verifyFirebaseToken, ensureCartOwnership, async (req, res
  * @access  Private
  */
 router.post('/:userId/add', verifyFirebaseToken, ensureCartOwnership, validateRequest(cartAddSchema), async (req, res) => {
+  if (!checkOwnership(req, res)) return;
+
   try {
     const { userId } = req.params;
     const { productId, quantity } = req.body;
@@ -82,6 +83,8 @@ router.post('/:userId/add', verifyFirebaseToken, ensureCartOwnership, validateRe
  * @access  Private
  */
 router.post('/:userId/remove', verifyFirebaseToken, ensureCartOwnership, validateRequest(cartRemoveSchema), async (req, res) => {
+  if (!checkOwnership(req, res)) return;
+
   try {
     const { userId } = req.params;
     const { productId, quantity } = req.body;
