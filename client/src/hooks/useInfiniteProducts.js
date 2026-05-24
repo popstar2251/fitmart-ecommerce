@@ -16,19 +16,16 @@ async function fetchProducts({ pageParam = 1, queryKey }) {
 }
 
 export default function useInfiniteProducts(params = { limit: 24 }) {
-  return useInfiniteQuery([
-    'products',
-    params,
-  ],
-    fetchProducts,
-    {
-      getNextPageParam: (lastPage) => {
-        if (!lastPage || !lastPage.meta) return undefined;
-        const { page, totalPages } = lastPage.meta;
-        return page < totalPages ? page + 1 : undefined;
-      },
-      retry: 2,
-      staleTime: 1000 * 60 * 2, // 2 minutes
-      cacheTime: 1000 * 60 * 10,
-    });
+  return useInfiniteQuery({
+    queryKey: ['products', params],
+    queryFn: fetchProducts,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage || !lastPage.meta) return undefined;
+      const { page, totalPages } = lastPage.meta;
+      return page < totalPages ? page + 1 : undefined;
+    },
+    retry: 2,
+    staleTime: 1000 * 60 * 2, // 2 minutes
+    cacheTime: 1000 * 60 * 10,
+  });
 }
