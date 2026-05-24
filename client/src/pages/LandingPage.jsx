@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { auth } from "../auth/firebase";
+import { useAuth } from "../auth/useAuth";
 import { fmt } from "../utils/formatters";
 import { useGithubStats } from "../utils/useGithubStats";
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -614,6 +615,7 @@ export default function LandingPage() {
 function NavbarWithGithub({ navOpaque, menuOpen, setMenuOpen, ghStats, ghLoading }) {
   const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -668,15 +670,16 @@ function NavbarWithGithub({ navOpaque, menuOpen, setMenuOpen, ghStats, ghLoading
 
           {/* Get Started */}
           <button
-            onClick={() => navigate(auth.currentUser ? "/home" : "/auth")}
+            onClick={() => { if (!authLoading) navigate(user ? "/home" : "/auth"); }}
+            disabled={authLoading}
             className={`text-xs sm:text-sm px-4 sm:px-5 py-2 rounded-full transition-colors
-                           min-h-9 active:scale-[0.97]
+                           min-h-9 active:scale-[0.97] ${authLoading ? 'opacity-60 pointer-events-none' : ''}
                            ${isOpaque
                 ? "bg-stone-900 text-white hover:bg-stone-700"
                 : "bg-white text-stone-900 hover:bg-stone-100"
               }`}
           >
-            Get Started
+            {authLoading ? '...' : 'Get Started'}
           </button>
         </div>
       </div>
