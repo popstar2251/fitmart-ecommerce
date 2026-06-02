@@ -1,0 +1,103 @@
+name: CI
+
+# Run on pull requests targeting main to block broken PRs from merging
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  frontend:
+    name: Frontend — build & lint
+    runs-on: ubuntu-latest
+    # Expose Vite env vars required for a successful build using safe dummy values
+    env:
+      VITE_API_URL: http://localhost:5000
+      VITE_FIREBASE_API_KEY: ci_dummy
+      VITE_FIREBASE_AUTH_DOMAIN: ci_dummy
+      VITE_FIREBASE_PROJECT_ID: ci_dummy
+      VITE_FIREBASE_STORAGE_BUCKET: ci_dummy
+      VITE_FIREBASE_MESSAGING_SENDER_ID: ci_dummy
+      VITE_FIREBASE_APP_ID: ci_dummy
+      VITE_FIREBASE_MEASUREMENT_ID: ci_dummy
+      VITE_RAZORPAY_KEY_ID: ci_dummy
+      VITE_ADMIN_UID: ci_dummy
+      VITE_SUPER_ADMIN_UID: ci_dummy
+      VITE_DEV_ADMIN_EMAIL: admin@example.com
+      VITE_DEV_ADMIN_UID: dev-admin-uid
+    steps:
+      # Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup Node.js and enable npm caching for faster installs
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Install frontend dependencies using the lockfile for deterministic installs
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+
+      # Lint the frontend codebase to catch style/ESLint issues early
+      - name: Lint client
+        working-directory: client
+        run: npm run lint
+
+      # Build the frontend; uses Vite and the env placeholders above
+      - name: Build client
+        working-directory: client
+        run: npm run build
+
+  backend:
+    name: Backend — tests
+    runs-on: ubuntu-latest
+    env:
+      # Minimal env needed for tests; use non-sensitive dummy values in CI
+      NODE_ENV: test
+      PORT: 5000
+      MONGO_URI: mongodb://localhost:27017
+      MONGO_DB: FitMart
+      ADMIN_UID: ci_dummy
+      SUPER_ADMIN_UID: ci_dummy
+      VITE_ADMIN_UID: ci_dummy
+      VITE_SUPER_ADMIN_UID: ci_dummy
+      CLOUDINARY_CLOUD_NAME: ci_dummy
+      CLOUDINARY_API_KEY: ci_dummy
+      CLOUDINARY_API_SECRET: ci_dummy
+      RAZORPAY_KEY_ID: ci_dummy
+      RAZORPAY_KEY_SECRET: ci_dummy
+      GEMINI_API_KEY: ci_dummy
+      GEMINI_MODEL_NAME: gemini-2.5-flash
+      FIREBASE_PROJECT_ID: ci_dummy
+      FIREBASE_CLIENT_EMAIL: ci_dummy
+      FIREBASE_PRIVATE_KEY: "ci_dummy"
+      RAPIDAPI_KEY: ci_dummy
+      RAPIDAPI_HOST: exercisedb.p.rapidapi.com
+      SMTP_HOST: ci_dummy
+      SMTP_PORT: 587
+      SMTP_SECURE: false
+      SMTP_USER: ci_dummy
+      SMTP_PASS: ci_dummy
+      SMTP_FROM: noreply@fitmart.local
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Install server dependencies using the lockfile for deterministic installs
+      - name: Install server dependencies
+        working-directory: server
+        run: npm ci
+
+      # Run unit tests (Jest). Tests in this project mock external services.
+      - name: Run server tests
+        working-directory: server
+        run: npm test --silent
