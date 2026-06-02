@@ -10,9 +10,7 @@ updates:
       - "dependencies"
     reviewers:
       - "parthnarkar"
-    assignees: []
     target-branch: "main"
-    # Group minor and patch updates together into a single PR
     groups:
       minor-and-patch:
         patterns:
@@ -31,7 +29,6 @@ updates:
       - "dependencies"
     reviewers:
       - "parthnarkar"
-    assignees: []
     target-branch: "main"
     groups:
       minor-and-patch:
