@@ -4,7 +4,7 @@ const {
   createOrderSchema,
   createProductSchema,
   updateProductSchema,
-} = require('./requestSchemas');
+} = require('../validation/requestSchemas');
 
 describe('requestSchemas - cartAddSchema', () => {
   describe('params validation (userIdParamsSchema)', () => {
