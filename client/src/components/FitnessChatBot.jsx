@@ -43,12 +43,25 @@ export default function FitnessChatBot() {
 
   // Prevent body scroll on mobile when chat is open
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
+    const isMobile = () => window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+    const applyLock = () => {
+      if (open && isMobile()) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    };
+
+    applyLock();
+    const onResize = () => {
+      // Re-apply lock when viewport changes while open
+      applyLock();
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('resize', onResize);
+    };
   }, [open]);
 
   const send = async () => {
